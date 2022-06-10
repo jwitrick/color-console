@@ -18,7 +18,7 @@
 
 plugins {
   java
-  kotlin("jvm") version "1.6.0"
+  //kotlin("jvm") version "1.6.0"
   `maven-publish`
 }
 
@@ -26,28 +26,35 @@ repositories {
   mavenCentral()
 }
 
-dependencies {
-  implementation(kotlin("stdlib-jdk8"))
-  testImplementation("junit", "junit", "4.12")
-}
+//dependencies {
+//  implementation(kotlin("stdlib-jdk8"))
+//  testImplementation("junit", "junit", "4.12")
+//}
 
-tasks {
-  compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-  }
-  compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-  }
-}
+//tasks {
+//  compileKotlin {
+//    kotlinOptions.jvmTarget = "1.8"
+//  }
+//  compileTestKotlin {
+//    kotlinOptions.jvmTarget = "1.8"
+//  }
+//}
 
 publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      groupId = "com.developerlife"
-      artifactId = "color-console"
-      version = "1.0.1"
-
-      from(components["java"])
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/jwitrick/color-console")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: "jwitrick"
+                password = project.findProperty("gpr.key") as String? ?: "REPLACE_WITH_TOKEN"
+            }
+        }
     }
-  }
+    publications {
+        register<MavenPublication>("gpr") {
+            groupId = "jwitrick"
+            from(components["java"])
+        }
+    }
 }
